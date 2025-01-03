@@ -1,0 +1,9 @@
+{
+    "combined_output": true,
+    "ips": {
+        "generic":      "192.168.72.100"
+    },
+    "cache_domains": {
+        "default":      "generic"
+    }
+}
