@@ -1,0 +1,49 @@
+name: Create and Release DNSMasq Configurations
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  generate-config:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Checkout the repository
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    # Ensure jq is installed
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y jq
+
+    # Run the script
+    - name: Generate DNSMasq Configurations
+      run: |
+        cd ./scripts
+        chmod +x create-dnsmasq.sh
+        ./create-dnsmasq.sh
+
+    - name: Create GitHub Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: "release-${{ github.run_number }}"
+        release_name: "DNSMasq Configurations"
+        draft: false
+        prerelease: false
+
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./scripts/output/dnsmasq/lancache.conf
+        asset_name: lancache.conf
+        asset_content_type: text/plain
