@@ -10,40 +10,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # Checkout the repository
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    # Ensure jq is installed
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y jq
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq
 
-    # Run the script
-    - name: Generate DNSMasq Configurations
-      run: |
-        cd ./scripts
-        chmod +x create-dnsmasq.sh
-        ./create-dnsmasq.sh
+      - name: Generate DNSMasq Configurations
+        run: |
+          cd ./scripts
+          chmod +x create-dnsmasq.sh
+          ./create-dnsmasq.sh
 
-    - name: Create GitHub Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: "latest"
-        release_name: "DNSMasq Configurations"
-        draft: false
-        prerelease: false
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: "DNSMasq Configurations"
+          files: ./scripts/output/dnsmasq/lancache.conf
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Upload Release Asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./scripts/output/dnsmasq/lancache.conf
-        asset_name: lancache.conf
-        asset_content_type: text/plain
