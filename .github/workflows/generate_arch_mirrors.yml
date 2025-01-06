@@ -1,10 +1,6 @@
 name: "Generate Arch Mirror List"
 
-
 on:
-  push:
-    branches:
-      - master
   schedule:
     - cron: "0 0 * * *"
   workflow_dispatch:
@@ -30,6 +26,6 @@ jobs:
         uses: Automattic/action-commit-to-branch@master
         with:
           branch: "master"
-          commit_message: "GitHub Actions build: ${{ steps.date.outputs.date }}"
+          commit_message: "Update arch mirror list ${{ steps.date.outputs.date }}"
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
