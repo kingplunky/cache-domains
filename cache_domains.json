@@ -121,6 +121,11 @@
 			"name": "xboxlive",
 			"description": "CDN for xboxlive",
 			"domain_files": ["xboxlive.txt"]
+		},
+        {
+			"name": "arch",
+			"description": "CDN for arch mirrors",
+			"domain_files": ["arch.txt"]
 		}
 	]
 }
